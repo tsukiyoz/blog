@@ -1,0 +1,25 @@
+name: Deploy Hugo
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive  # 确保加载主题子模块
+
+      - name: Install Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: '0.125.7'  # 指定版本（建议用最新稳定版）
+          extended: true           # 必须启用扩展版！
+
+      - name: Build
+        run: hugo --minify        # 现在可以正常执行
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
